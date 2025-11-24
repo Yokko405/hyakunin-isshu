@@ -500,6 +500,21 @@
 <body>
     <div class="combo-display" id="comboDisplay"></div>
     
+    <!-- BGMプレーヤー -->
+    <audio id="bgm" loop>
+        <source src="百人一首.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- BGMコントロールボタン -->
+    <button id="bgmToggle" style="position: fixed; bottom: 20px; right: 20px; 
+        width: 60px; height: 60px; border-radius: 50%; border: none; 
+        background: linear-gradient(135deg, #667eea, #764ba2); 
+        color: white; font-size: 24px; cursor: pointer; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000;
+        transition: all 0.3s ease;">
+        🔇
+    </button>
+    
     <div class="container">
         <header>
             <h1>🎌 百人一首マスター</h1>
@@ -2104,6 +2119,38 @@
             document.getElementById('gameArea').innerHTML = '';
             gameState.mode = null;
         }
+
+        // BGMコントロール
+        const bgm = document.getElementById('bgm');
+        const bgmToggle = document.getElementById('bgmToggle');
+        let isPlaying = false;
+
+        bgm.volume = 0.5; // 音量50%
+
+        // トグルボタンクリックイベント
+        bgmToggle.addEventListener('click', () => {
+            if (isPlaying) {
+                bgm.pause();
+                bgmToggle.textContent = '🔇';
+                isPlaying = false;
+            } else {
+                bgm.play().then(() => {
+                    bgmToggle.textContent = '🔊';
+                    isPlaying = true;
+                }).catch(err => {
+                    console.log('BGM再生エラー:', err);
+                    isPlaying = false;
+                });
+            }
+        });
+
+        // ホバーエフェクト
+        bgmToggle.addEventListener('mouseenter', () => {
+            bgmToggle.style.transform = 'scale(1.1)';
+        });
+        bgmToggle.addEventListener('mouseleave', () => {
+            bgmToggle.style.transform = 'scale(1)';
+        });
 
         // 初期化
         loadStats();
